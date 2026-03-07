@@ -3,6 +3,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Dict, List, Tuple, Optional, Set
 
+# ==============================
+# DATA MODEL
+# ==============================
 
 @dataclass(frozen=True)
 class Movie:
@@ -11,6 +14,9 @@ class Movie:
     movie_id: str
     name: str
 
+# ==============================
+# HELPER FUNCTIONS
+# ==============================
 
 def _normalize_key(s: str) -> str:
     """
@@ -21,6 +27,9 @@ def _normalize_key(s: str) -> str:
     """
     return s.strip().casefold()
 
+# ==============================
+# DATA LOADING FUNCTIONS
+# ==============================
 
 def load_movies(movies_path: str) -> Tuple[Dict[str, Movie], Dict[str, List[str]]]:
     """
@@ -102,6 +111,9 @@ def load_ratings(ratings_path: str) -> List[Tuple[str, float, str]]:
 
     return ratings
 
+# ==============================
+# MOVIE RATING CALCULATIONS
+# ==============================
 
 def compute_movie_avg_ratings(ratings: List[Tuple[str, float, str]]) -> Dict[str, float]:
     """
@@ -171,6 +183,9 @@ def top_n_movies_in_genre(movie_avgs: Dict[str, float],
     items.sort(key=lambda x: (-x[1], x[0].casefold()))
     return items[: max(0, n)]
 
+# ==============================
+# GENRE ANALYSIS
+# ==============================
 
 def compute_genre_popularity(movie_avgs: Dict[str, float],
                              movies_by_name_norm: Dict[str, Movie]) -> Dict[str, float]:
@@ -213,6 +228,9 @@ def top_n_genres(genre_popularity: Dict[str, float],
     # Display: use original casing? We only have normalized; keep normalized.
     return [(g, score) for g, score in items[: max(0, n)]]
 
+# ==============================
+# USER PREFERENCE ANALYSIS
+# ==============================
 
 def user_genre_preference(ratings: List[Tuple[str, float, str]],
                           movies_by_name_norm: Dict[str, Movie],
@@ -259,6 +277,9 @@ def user_top_genre(ratings: List[Tuple[str, float, str]],
     items.sort(key=lambda x: (-x[1], x[0]))
     return items[0][0]
 
+# ==============================
+# MOVIE RECOMMENDATION LOGIC
+# ==============================
 
 def recommend_movies_for_user(ratings: List[Tuple[str, float, str]],
                               movies_by_name_norm: Dict[str, Movie],
@@ -295,10 +316,14 @@ def recommend_movies_for_user(ratings: List[Tuple[str, float, str]],
     items.sort(key=lambda x: (-x[1], x[0].casefold()))
     return items[: max(0, k)]
 
-
-# ---------------- CLI ----------------
+# ==============================
+# COMMAND LINE INTERFACE (CLI)
+# ==============================
 
 def _print_menu() -> None:
+    """
+    Print the command line interface menu for the movie recommender program.
+    """
     print("\n=== Movie Recommender CLI ===")
     print("1) Load movies file")
     print("2) Load ratings file")
@@ -311,6 +336,9 @@ def _print_menu() -> None:
 
 
 def main() -> None:
+    """
+    Run the main command line interface loop for the movie recommender program.
+    """
     movies_by_name_norm: Dict[str, Movie] = {}
     genre_to_movies_norm: Dict[str, List[str]] = {}
     ratings: List[Tuple[str, float, str]] = []
